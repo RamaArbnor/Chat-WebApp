@@ -1,0 +1,29 @@
+.msgSnd {
+    display: flex;
+    align-self: flex-end;
+    width: max-content;
+    height: max-content;
+    background-color: greenyellow;  
+    padding: 0.3rem 0.8rem;
+    margin: 1rem; 
+    border-radius: 1rem;
+    text-align: center;
+    color: black;
+    font-weight: 700;
+    overflow-wrap: break-word;
+}
+
+.msgRcv {
+    /* display: flex;
+    align-self: flex-start; */
+    width: max-content;
+    height: max-content;
+    background-color: lightblue;  
+    padding: 0.3rem 0.8rem;
+    margin: 1rem; 
+    border-radius: 1rem;
+    text-align: center;
+    color: black;
+    font-weight: 700;   
+    overflow-wrap: break-word;
+}
