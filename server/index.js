@@ -6,17 +6,27 @@ const app = express();
 app.use((express.json()))
 app.use(cors())
 
-app.get("/", (req, res) => {
-   res.send("This is home page.");
-});
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, {
+   cors:  {
+      origin: '*'
+}})
 
-app.post("/", (req, res) => {
-   res.send("This is home page with post request.");
-});
+
+io.on('connection', (socket) => {
+
+   console.log(`id ${socket.id} connected`)
+
+   socket.on('sendMessage', (data)=> {
+      socket.broadcast.emit('receiveMessage', data);
+      console.log(data)
+   })
+
+})
 
 // PORT
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
    console.log(`Server is running on PORT: ${PORT}`);
 });

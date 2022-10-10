@@ -1,17 +1,38 @@
 import '../App.css';
 import MessageRecieve from '../component/MessageRecieve';
 import MessageSend from '../component/MessageSend';
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:5000')
 
 export default function Chat() {
 
-    const [msg, setMsg] = useState([{ text: 'sender', id: 0 }, { text: 'Sender', id: 0 }, { text: 'Reciev', id: 1 }])
+    const [msg, setMsg] = useState([])
     const [input, setInput] = useState('')
 
+    
+    socket.on('connection', () => {
+        
+
+    })
+
+    useEffect(() => {
+        console.log('connected')
+        socket.on('receiveMessage', (data) => {
+            setMsg(msg => [...msg, data])
+
+
+        })
+
+    }, [socket])
 
     const sndMsg = () => {
         if (input) {
-            setMsg(msg => [...msg, { text: input, id: 0 }])
+            setMsg(msg => [...msg, { text: input, id: socket.id }])
+
+            socket.emit('sendMessage', {text: input, id: socket.id})
+
             setInput('')
         }
 
@@ -22,7 +43,7 @@ export default function Chat() {
         <div className="chat">
             <div className="messagePanel">
                 {msg.map(msg => {
-                    if (msg.id === 0) {
+                    if (msg.id === socket.id) {
                         return <MessageSend text={msg.text} />
                     } else {
                         return <MessageRecieve text={msg.text} />
@@ -34,7 +55,7 @@ export default function Chat() {
             </div>
             <div className='inputPanel'>
                 <input type="text" className="messageInput" placeholder='Message...' value={input} onInput={e => setInput(e.target.value)}></input>
-                <div className='send' onClick={sndMsg}>Send</div>
+                <button className='send' type="submit" onClick={sndMsg}>Send</button>
             </div>
         </div>
     )
